@@ -6,7 +6,11 @@
 
 {% block page_content %}
 <div class="page_header">
-	<h1>Hello!</h1>
+	{% if name %}
+		<h1>你好，{{ name }}!</h1>
+	{% else %}
+		<h1>欢迎!请登录~</h1>
+	{% endif %}
 </div>
 {{wtf.quick_form(form)}}
 {% endblock %}

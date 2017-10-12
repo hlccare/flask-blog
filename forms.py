@@ -10,3 +10,8 @@ class RegisterForm(FlaskForm):
     password = PasswordField('密码', validators=[DataRequired()])
     password2 = PasswordField('请再次输入密码', validators=[DataRequired, EqualTo('password', message='密码不一致，请重新输入')])
     submit = SubmitField('注册')
+
+class LoginForm(FlaskForm):
+    username = StringField('用户名', validators=[DataRequired()])
+    password = PasswordField('密码', validators=[DataRequired()])
+    submit = SubmitField('登录')
