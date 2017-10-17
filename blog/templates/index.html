@@ -5,11 +5,16 @@
 
 
 {% block page_content %}
-<div class="page_header">
-	{% if name %}
-		<h1>你好，{{ name }}!</h1>
+<div class="page-header">
+	{% if current_user.is_authenticated %}
+		<h1>你好，{{ current_user.username }}!</h1>
 	{% else %}
 		<h1>欢迎!请登录~</h1>
 	{% endif %}
 </div>
+{% if current_user.is_authenticated %}
+<div>
+	{{ wtf.quick_form(form) }}
+</div>
+{% endif %}
 {% endblock %}

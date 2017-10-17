@@ -40,3 +40,11 @@ def register():
         flash('已成功注册')
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=register_Form)
+
+@auth.route('/change-password', methods=['GET', 'POST'])
+def change_password():
+    pass
+
+@auth.route('/change-username', methods=['GET', 'POST'])
+def change_username():
+    pass
