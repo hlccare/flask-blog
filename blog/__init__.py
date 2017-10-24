@@ -4,12 +4,16 @@ from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
+from flask_moment import Moment
 from flask_login import LoginManager
+from flask_pagedown import PageDown
 from config import config
 
 bootstrap = Bootstrap()
 db = SQLAlchemy()
 mail = Mail()
+moment = Moment()
+pagedown = PageDown()
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
@@ -24,7 +28,9 @@ def create_app(config_name):
     bootstrap.init_app(blog)
     mail.init_app(blog)
     db.init_app(blog)
+    moment.init_app(blog)
     login_manager.init_app(blog)
+    pagedown.init_app(blog)
 
     with blog.app_context():
         db.create_all()
