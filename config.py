@@ -12,6 +12,7 @@ class Config:
     FLASKY_MAIL_SUBJECT_PREFIX = '[认证]'
     FLASKY_MAIL_SENDER = '博客认证<280108904@qq.com>'
     FLASKY_POSTS_PER_PAGE = 15
+    FLASKY_FOLLOWERS_PER_PAGE = 10
 
     @staticmethod
     def init_app(app):
