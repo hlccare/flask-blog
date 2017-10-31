@@ -8,6 +8,8 @@ from flask_moment import Moment
 from flask_login import LoginManager
 from flask_pagedown import PageDown
 from config import config
+from flask_pagedown import PageDown
+from flask_moment import Moment
 
 bootstrap = Bootstrap()
 db = SQLAlchemy()

@@ -3,7 +3,11 @@
 import os
 import sys
 from blog import create_app, db
+<<<<<<< HEAD
 from blog.models import User, Post, Follow
+=======
+from blog.models import User, Post
+>>>>>>> bravo
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 
@@ -23,7 +27,11 @@ def test():
 
 
 def make_shell_context():
+<<<<<<< HEAD
     return dict(blog=blog, db=db, User=User, Post=Post, Follow=Follow)
+=======
+    return dict(blog=blog, db=db, User=User, Post=Post)
+>>>>>>> bravo
 
 
 manager.add_command("shell", Shell(make_context=make_shell_context))
