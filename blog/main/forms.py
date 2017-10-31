@@ -3,10 +3,11 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, TextAreaField
 from wtforms.validators import DataRequired, EqualTo, Email
+from flask_pagedown.fields import PageDownField
 
 
 class PostForm(FlaskForm):
-    body = TextAreaField('写下你的想法', validators=[DataRequired()])
+    body = PageDownField('写下你的想法', validators=[DataRequired()])
     submit = SubmitField('提交')
 
 
