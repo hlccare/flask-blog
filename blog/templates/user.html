@@ -32,7 +32,7 @@
         <p>
             {% if user!=current_user %}
                 {% if not current_user.is_following(user) %}
-                <a href="{{url_for('.follow',username=username.username)}}" class="btn btn-primary">关注</a>
+                <a href="{{url_for('.follow',username=user.username)}}" class="btn btn-primary">关注</a>
                 {% else %}
                 <a href="{{url_for('.unfollow',username=user.username)}}" class="btn btn-default">取消关注</a>
                 {% endif %}

@@ -31,3 +31,8 @@ class EditProfileForm(FlaskForm):
     connect_mail = StringField('联系邮箱', validators=[DataRequired(), Email()])
     about_me = TextAreaField('简单描述', validators=[DataRequired()])
     summit = SubmitField('提交修改')
+
+
+class CommentForm(FlaskForm):
+    body = StringField('', validators=[DataRequired()])
+    submit = SubmitField('提交评论')

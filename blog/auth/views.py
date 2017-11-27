@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from flask import render_template, redirect, url_for, flash, request
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 from . import auth
 from ..models import User
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, ChangePasswordForm, ChangeUsernameForm
 from .. import db
 
 
@@ -42,9 +42,29 @@ def register():
     return render_template('auth/register.html', form=register_Form)
 
 @auth.route('/change-password', methods=['GET', 'POST'])
+@login_required
 def change_password():
-    pass
+    change_password_form = ChangePasswordForm()
+    if change_password_form.validate_on_submit():
+        if current_user.verify_password(change_password_form.old_password.data):
+            current_user.password = change_password_form.new_password.data
+            db.session.add(current_user)
+            db.session.commit()
+            flash('已成功修改密码！')
+            logout()
+            return redirect(url_for('main.index'))
+        else:
+            flash('原密码不正确！')
+    return render_template('auth/change_password.html',form=change_password_form)
 
 @auth.route('/change-username', methods=['GET', 'POST'])
+@login_required
 def change_username():
-    pass
+    change_username_form = ChangeUsernameForm()
+    if change_username_form.validate_on_submit():
+        current_user.username = change_username_form.new_username.data
+        db.session.add(current_user)
+        db.session.commit()
+        flash('已成功修改用户名！')
+        return redirect(url_for('main.index'))
+    return render_template('auth/change_username.html', form=change_username_form)

@@ -30,3 +30,18 @@ class RegisterForm(FlaskForm):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('此用户名已存在')
 
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField('原密码', validators=[DataRequired()])
+    new_password = PasswordField('密码', validators=[DataRequired(), EqualTo('new_password2', message='两次输入的密码不一致，请重新输入！')])
+    new_password2 = PasswordField('确认密码', validators=[DataRequired()])
+    submit = SubmitField('提交修改')
+
+
+class ChangeUsernameForm(FlaskForm):
+    new_username = StringField('用户名', validators=[DataRequired(), Length(1,64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0, '用户名只可包含字母、数字、.及_')])
+    submit = SubmitField('提交修改')
+
+
+    def validate_new_username(self, field):
+        if User.query.filter_by(username=field.data).first():
+            raise ValidationError('此用户名已存在')

@@ -30,6 +30,11 @@
 						个人资料
 					</a>
 				</li>
+				<li>
+					<a href="{{ url_for('main.moderate', username=current_user.username)}}">
+						评论恢复
+					</a>
+				</li>
 				{% endif %}
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
@@ -67,11 +72,8 @@
 </div>
 {% endblock %}
 
-<<<<<<< HEAD
 
-=======
 {% block scripts %}
 {{ super() }}
 {{ moment.include_moment() }}
 {% endblock %}
->>>>>>> bravo

@@ -7,13 +7,10 @@
     margin-left: 400px;
 }
 
-<<<<<<< HEAD
 div.post-tabs{
     margin-top:16px;
 }
 
-=======
->>>>>>> bravo
 ul.posts{
     list-style-type: none;
     padding: 0px;
@@ -21,14 +18,12 @@ ul.posts{
     border-top: 1px solid #e0e0e0;
 }
 
-<<<<<<< HEAD
+
 div.post-tabs ul.posts{
     margin:0px;
     border-top:none;
 }
 
-=======
->>>>>>> bravo
 ul.posts li.post{
     padding: 8px;
     border-bottom: 1px solid #e0e0e0;
@@ -39,11 +34,7 @@ ul.posts li.post:hover{
 }
 
 div.post-date{
-<<<<<<< HEAD
-    float: right
-=======
     float: right;
->>>>>>> bravo
 }
 
 div.post-author{
@@ -56,6 +47,51 @@ div.post-content{
 }
 
 div.post-footer{
+    text-align: right;
+}
+
+ul.comments{
+    list-style-type: none;
+    padding: 0px;
+    margin: 16px 0px 0px 0px;
+}
+
+ul.comments.li.comment{
+    margin_left: 32px;
+    padding: 8px;
+    border_bottom: 1px solid #e0e0e0;
+}
+
+ul.comments.li.comment:nth_child(1){
+    border_top: 1px solid #e0e0e0;
+}
+
+ul.comments.li.comment:hover{
+    background-color: #f0f0f0;
+}
+
+div.comment-date{
+    float: right;
+}
+
+div.comment-author{
+    font-weight: bold;
+}
+
+div.comment-thumbnail{
+    position: absolute;
+}
+
+div.comment-content{
+    margin-left: 48px;
+    min-height: 48px;
+}
+
+div.comment-form{
+    margin:16px 0px 16px 32px;
+}
+
+div.comment-footer{
     text-align: right;
 }
 
@@ -93,12 +129,8 @@ div.flask-pagedown-preview h3{
 
 .post-body h3{
     font-size: 120%;
-<<<<<<< HEAD
 }
 
 .table.followers tr{
     border-bottom:1px solid #e0e0e0;
 }
-=======
-}
->>>>>>> bravo
