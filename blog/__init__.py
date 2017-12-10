@@ -34,6 +34,10 @@ def create_app(config_name):
     login_manager.init_app(blog)
     pagedown.init_app(blog)
 
+    from flask_sslify import SSLify
+
+    sslify = SSLify(blog)
+
     with blog.app_context():
         db.create_all()
 

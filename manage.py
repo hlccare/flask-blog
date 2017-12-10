@@ -5,7 +5,7 @@ import sys
 from blog import create_app, db
 from blog.models import User, Post, Follow, Comment
 from flask_script import Manager, Shell
-from flask_migrate import Migrate, MigrateCommand
+from flask_migrate import Migrate, MigrateCommand, upgrade
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -13,7 +13,7 @@ blog = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(blog)
 migrate = Migrate(blog, db)
 
-
+	
 @manager.command
 def test():
     """Run the unit tests"""
@@ -28,6 +28,15 @@ def make_shell_context():
 
 manager.add_command("shell", Shell(make_context=make_shell_context))
 manager.add_command('db', MigrateCommand)
+
+
+@manager.command
+def deploy():
+    upgrade()
+    if User.query.count()<1:
+        User.generate_fake(100)
+        Post.generate_fake(100)
+    User.add_self_follows()
 
 if __name__ == '__main__':
     manager.run()
