@@ -1,6 +1,12 @@
 .profile-thumbnail{
+    margin-top: 26px;
     position:absolute;
 }
+
+.profile-thumbnail-absolute{
+    position: absolute;
+}
+
 
 .profile-header{
     min-height: 260px;
@@ -37,6 +43,10 @@ div.post-date{
     float: right;
 }
 
+div.post-title{
+}
+
+
 div.post-author{
     font-weight: bold;
 }
@@ -44,11 +54,19 @@ div.post-author{
 div.post-content{
     margin-left:48px;
     min-height:48px;
+
 }
 
 div.post-footer{
     text-align: right;
 }
+
+div.post-body{
+    max-height:100px;
+    overflow:auto;
+    overflow-x:hidden；
+}
+
 
 ul.comments{
     list-style-type: none;

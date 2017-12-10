@@ -4,10 +4,12 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, TextAreaField
 from wtforms.validators import DataRequired, EqualTo, Email
 from flask_pagedown.fields import PageDownField
+from flaskckeditor import CKEditor
 
 
-class PostForm(FlaskForm):
-    body = PageDownField('写下你的想法', validators=[DataRequired()])
+class PostForm(FlaskForm, CKEditor):
+    title = StringField('标题', validators=[DataRequired()])
+    body = TextAreaField('内容', validators=[DataRequired()])
     submit = SubmitField('提交')
 
 

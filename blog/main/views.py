@@ -13,7 +13,7 @@ def index():
     # send_mail('280108904@qq.com', '欢迎')
     post_form = PostForm()
     if post_form.validate_on_submit():
-        post = Post(body=post_form.body.data, author=current_user._get_current_object())
+        post = Post(title=post_form.title.data, body=post_form.body.data, author=current_user._get_current_object())
         db.session.add(post)
         return redirect(url_for('.index'))
     page = request.args.get('page', 1, type=int)
@@ -57,7 +57,7 @@ def edit_profile():
     edit_profile_form.location.data = current_user.location
     edit_profile_form.connect_mail.data = current_user.connect_mail
     edit_profile_form.about_me.data = current_user.about_me
-    return render_template('main/edit-profile.html', form=edit_profile_form)
+    return render_template('edit-profile.html', form=edit_profile_form)
 
 
 @main.route('/post/<int:id>', methods=['GET', 'POST'])
@@ -88,12 +88,26 @@ def edit(id):
         abort(403)
     post_form = PostForm()
     if post_form.validate_on_submit():
+        post.title = post_form.title.data
         post.body = post_form.body.data
         db.session.add(post)
         flash('已成功修改文章！')
         return redirect(url_for('.post', id=post.id))
+    post_form.title.data = post.title
     post_form.body.data = post.body
     return render_template('edit_post.html', form = post_form)
+
+@main.route('/editpost', methods=['GET', 'POST'])
+@login_required
+def editpost():
+    post_form = PostForm()
+    if post_form.validate_on_submit():
+        post = Post(title=post_form.title.data, body=post_form.body.data, author=current_user._get_current_object())
+        db.session.add(post)
+        flash('已成功发表博客！')
+        post = Post.query.filter_by(author=current_user._get_current_object()).order_by
+        return redirect(url_for('.user', username=current_user.username))
+    return render_template('edit_post.html', form=post_form)
 
 
 @main.route('/follow/<username>')
@@ -147,7 +161,7 @@ def followed_by(username):
         flash('用户不存在')
         return redirect(url_for('.index'))
     page = request.args.get('page',1,type=int)
-    pagination = user.followers.paginate(
+    pagination = user.followed.paginate(
         page, per_page=current_app.config['FLASKY_FOLLOWERS_PER_PAGE'],
         error_out=False
     )

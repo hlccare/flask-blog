@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from itsdangerous import Serializer
+
+from blog.exceptions import ValidationError
 from . import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import login_manager
 from datetime import datetime
 import hashlib
-from flask import request
+from flask import request, current_app, url_for
 from markdown import markdown
 import bleach
 
@@ -34,11 +37,31 @@ class Follow(db.Model):
 class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.Text)
     body = db.Column(db.Text)
     body_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
+
+    def to_json(self):
+        json_post = {
+            'url': url_for('api.get_post', id=self.od, _external=True),
+            'body': self.body,
+            'body_html': self.body_html,
+            'timestamp': self.timestamp,
+            'author': url_for('api.get_post_comments', id=self.id, _external=True),
+            'comment_count': self.comments.count()
+        }
+        return json_post
+
+    @staticmethod
+    def from_json(json_post):
+        body = json_post.get('body')
+        if body is None or body == '':
+            raise ValidationError('post does not have a body')
+        return Post(body=body)
+
 
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
@@ -47,20 +70,6 @@ class Post(db.Model):
         target.body_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'), tags=allowed_tags, strip=True))
 
-    @staticmethod
-    def generate_fake(count=100):
-        from random import seed, randint
-        import forgery_py
-
-        seed()
-        user_count = User.query.count()
-        for i in range(count):
-            u = User.query.offset(randint(0, user_count - 1)).first()
-            p = Post(body=forgery_py.lorem_ipsum.sentences(randint(1, 3)),
-                     timestamp=forgery_py.date.date(True),
-                     author=u)
-            db.session.add(p)
-            db.session.commit()
 
 
     @staticmethod
@@ -80,7 +89,8 @@ class Post(db.Model):
         user_count = User.query.count()
         for i in range(count):
             u = User.query.offset(randint(0, user_count-1)).first()
-            p = Post(body=forgery_py.lorem_ipsum.sentences(randint(1,3)),
+            p = Post(title=forgery_py.lorem_ipsum.title(),
+                     body=forgery_py.lorem_ipsum.sentences(randint(1,3)),
                      timestamp=forgery_py.date.date(True),
                      author=u)
             db.session.add(p)
@@ -109,6 +119,18 @@ class User(UserMixin, db.Model):
                                 lazy = 'dynamic',
                                 cascade='all,delete-orphan')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
+
+    def to_json(self):
+        json_user = {
+            'url': url_for('api.get_user', id=self.id),
+            'username': self.username,
+            'register_time': self.register_time,
+            'posts_url': url_for('api.get_user_posts', id=self.id),
+            'followed_posts_url': url_for('api.get_user_followed_posts',id=self.id),
+            'post_count': self.posts.count()
+        }
+        return json_user
+
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
@@ -144,6 +166,21 @@ class User(UserMixin, db.Model):
 
     def is_followed_by(self, user):
         return self.followers.filter_by(follower_id=user.id).first() is not None
+
+    def generate_auth_token(self, expiration):
+        s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
+        return s.dumps({'id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return None
+        return User.query.get(data['id'])
+
+
     @staticmethod
     def add_self_follows():
         for user in User.query.all():
